@@ -55,10 +55,12 @@ public class GameSelectionActivity extends FragmentActivity {
     public static String SERVER_ADDRESS = "http://www.possumpam.com/rugby-scoring-app-scripts/";
 
     /** Only Div 1 will be live scored at the moment */
-    //List<String> divisions = Arrays.asList("Div 1", "Div 2", "Div 3", "Colts", "U18", "U16", "U14.5", "U13", "U11.5");
+    //public static List<String> divisions = Arrays.asList("Div 1", "Women", "Div 2", "Div 3", "Colts",
+    //"U18", "U16", "U14.5", "U13", "U11.5", "U10", "U8.5", "U7");
     List<String> divisions = Arrays.asList("Div 1");
     List<String> teamsDiv1 = Arrays.asList("Waihora", "Lincoln", "Raikaia", "Methven", "Southbridge", "Burn/Duns/Irwell", "Glenmark", "Darfield",
             "Ashley", "Prebbleton", "Celtic", "Saracens", "Oxford", "Ohoka", "Kaiapoi", "West Melton", "Southern", "Hampstead");
+    List<String> teamsWomen = Arrays.asList();
     List<String> teamsDiv2 = Arrays.asList("Springston", "West Melton", "Diamond Harbour", "Leeston", "Darfield", "Selwyn", "Banks Peninsula",
             "Southbridge", "Hornby", "Kirwee", "Rolleston", "Lincoln", "Prebbleton", "Burn/Duns/Irwell");
     List<String> teamsDiv3 = Arrays.asList("Hornby", "Waihora", "Kirwee", "Springston", "Burn/Duns/Irwell", "Lincoln");
@@ -73,6 +75,9 @@ public class GameSelectionActivity extends FragmentActivity {
     List<String> teamsU115 = Arrays.asList("Prebbleton Black", "Rolleston Black", "Rolleston Gold", "Lincoln", "Southbridge", "Waihora White",
             "Duns/Irwell/Sprinst", "Selwyn/Sheffield", "West Melton", "Prebbleton Blue", "Prebbleton White", "Waihora Black", "Banks Peninsula",
             "Leeston", "Darfield/Kirwee");
+    List<String> teamsU10 = Arrays.asList();
+    List<String> teamsU9 = Arrays.asList();
+    List<String> teamsU75 = Arrays.asList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +89,7 @@ public class GameSelectionActivity extends FragmentActivity {
 
         // Sort all the team collections alphabetically
         Collections.sort(teamsDiv1);
+        Collections.sort(teamsWomen);
         Collections.sort(teamsDiv2);
         Collections.sort(teamsDiv3);
         Collections.sort(teamsColts);
@@ -92,18 +98,21 @@ public class GameSelectionActivity extends FragmentActivity {
         Collections.sort(teamsU145);
         Collections.sort(teamsU13);
         Collections.sort(teamsU115);
+        Collections.sort(teamsU10);
+        Collections.sort(teamsU9);
+        Collections.sort(teamsU75);
 
         spinnerDivision = (Spinner) findViewById(R.id.spinnerDivisionSelect);
         spinnerHomeTeam = (Spinner) findViewById(R.id.spinnerHomeTeamSelect);
         spinnerAwayTeam = (Spinner) findViewById(R.id.spinnerAwayTeamSelect);
         buttonSelectGame = (Button) findViewById(R.id.buttonSelectGame);
 
-        teamsAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, teamsDiv1);
+        teamsAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, teamsDiv1);
         teamsAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerHomeTeam.setAdapter(teamsAdapter);
         spinnerAwayTeam.setAdapter(teamsAdapter);
 
-        divisionAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, divisions);
+        divisionAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, divisions);
         divisionAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerDivision.setAdapter(divisionAdapter);
         spinnerDivision.setOnItemSelectedListener(divisionItemClickListener);
@@ -140,7 +149,7 @@ public class GameSelectionActivity extends FragmentActivity {
             HttpPost httppost = new HttpPost((String) objects[0]);
             try {
                 // Add gameID to List<NameValuePair> and add to HttpPost
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                List<NameValuePair> nameValuePairs = new ArrayList<>();
                 nameValuePairs.add(new BasicNameValuePair("gameID", gameID));
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
@@ -249,31 +258,43 @@ public class GameSelectionActivity extends FragmentActivity {
         public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
             switch (position) {
                 case 0:
-                    teamsAdapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, teamsDiv1);
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsDiv1);
                     break;
                 case 1:
-                    teamsAdapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, teamsDiv2);
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsWomen);
                     break;
                 case 2:
-                    teamsAdapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, teamsDiv3);
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsDiv2);
                     break;
                 case 3:
-                    teamsAdapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, teamsColts);
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsDiv3);
                     break;
                 case 4:
-                    teamsAdapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, teamsU18);
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsColts);
                     break;
                 case 5:
-                    teamsAdapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, teamsU16);
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU18);
                     break;
                 case 6:
-                    teamsAdapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, teamsU145);
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU16);
                     break;
                 case 7:
-                    teamsAdapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, teamsU13);
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU145);
                     break;
                 case 8:
-                    teamsAdapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, teamsU115);
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU13);
+                    break;
+                case 9:
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU115);
+                    break;
+                case 10:
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU10);
+                    break;
+                case 11:
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU9);
+                    break;
+                case 12:
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU75);
                     break;
             }
 
@@ -294,22 +315,21 @@ public class GameSelectionActivity extends FragmentActivity {
             // Create gameID and retrieve game details
             String homeTeam = spinnerHomeTeam.getSelectedItem().toString();
             String awayTeam = spinnerAwayTeam.getSelectedItem().toString();
-            String location = homeTeam;
             String time = "12pm";
 
             // Check if all necessary details have been entered
-            if (!homeTeam.equals("") && !awayTeam.equals("") && !location.equals("") && !time.equals("")) {
+            if (!homeTeam.equals("") && !awayTeam.equals("") && !time.equals("")) {
                 HttpClient httpclient = new DefaultHttpClient();
 
                 // Create HttpPost with script server address passed to asynctask
                 HttpPost httppost = new HttpPost((String) objects[0]);
                 try {
                     // Add all game details to List<NameValuePair> and add to HttpPost
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                    List<NameValuePair> nameValuePairs = new ArrayList<>();
                     nameValuePairs.add(new BasicNameValuePair("gameID", gameID));
                     nameValuePairs.add(new BasicNameValuePair("homeTeam", homeTeam));
                     nameValuePairs.add(new BasicNameValuePair("awayTeam", awayTeam));
-                    nameValuePairs.add(new BasicNameValuePair("location", location));
+                    nameValuePairs.add(new BasicNameValuePair("location", homeTeam));
                     nameValuePairs.add(new BasicNameValuePair("time", time));
                     httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
