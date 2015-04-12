@@ -1,6 +1,7 @@
 package chrisdalzell.livescoregames;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,11 +12,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +34,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -46,9 +54,11 @@ public class ScoreGameFragment extends Fragment {
     Button buttonAwayPenalty;
     Button buttonHomeDropGoal;
     Button buttonAwayDropGoal;
-    Button sendButton;
+    Button buttonSend;
     Button buttonHalfTime;
     Button buttonFullTime;
+    Button buttonStartGame;
+    Button buttonChangeScore;
     EditText editTextMinutesPlayed;
     EditText editTextDescription;
     TextView textViewHomeTeam;
@@ -66,7 +76,7 @@ public class ScoreGameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // load the layout
-        View rootView = inflater.inflate(R.layout.fragment_score_game, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_score_game, container, false);
 
         gameID = ScoreGameFragmentActivity.gameID;
         scoringPlay = "";
@@ -83,7 +93,7 @@ public class ScoreGameFragment extends Fragment {
 
         editTextMinutesPlayed = (EditText) rootView.findViewById(R.id.editTextMinutesPlayed);
         editTextDescription = (EditText) rootView.findViewById(R.id.editTextDescription);
-        sendButton = (Button) rootView.findViewById(R.id.sendButton);
+        buttonSend = (Button) rootView.findViewById(R.id.buttonSend);
         buttonHomeTry = (Button) rootView.findViewById(R.id.buttonHomeTry);
         buttonAwayTry = (Button) rootView.findViewById(R.id.buttonAwayTry);
         buttonHomeConversion = (Button) rootView.findViewById(R.id.buttonHomeConversion);
@@ -94,10 +104,14 @@ public class ScoreGameFragment extends Fragment {
         buttonAwayDropGoal = (Button) rootView.findViewById(R.id.buttonAwayDropGoal);
         buttonHalfTime = (Button) rootView.findViewById(R.id.buttonHalfTime);
         buttonFullTime = (Button) rootView.findViewById(R.id.buttonFullTime);
+        buttonStartGame = (Button) rootView.findViewById(R.id.buttonStartGame);
+        buttonChangeScore = (Button) rootView.findViewById(R.id.buttonChangeScore);
 
-        sendButton.setOnClickListener(otherClickListener);
+        buttonSend.setOnClickListener(otherClickListener);
         buttonHalfTime.setOnClickListener(otherClickListener);
         buttonFullTime.setOnClickListener(otherClickListener);
+        buttonStartGame.setOnClickListener(otherClickListener);
+        buttonChangeScore.setOnClickListener(otherClickListener);
         buttonHomeTry.setOnClickListener(homeClickListener);
         buttonAwayTry.setOnClickListener(awayClickListener);
         buttonHomeConversion.setOnClickListener(homeClickListener);
@@ -126,17 +140,80 @@ public class ScoreGameFragment extends Fragment {
                 editTextMinutesPlayed.setText("40");
                 scoringPlay = "halfTime";
                 resetButtonBackground();
-                button.setBackgroundColor(Color.parseColor("#D0D0D0"));
+                confirmPlay();
             } else if (button.getText().equals("Full Time")) {
                 // If full time button clicked, set minutesPlayed text to 80, set the scoringPlay
                 // to fullTime, reset button background then set full time button to grey background
                 editTextMinutesPlayed.setText("80");
                 scoringPlay = "fullTime";
                 resetButtonBackground();
-                button.setBackgroundColor(Color.parseColor("#D0D0D0"));
+                confirmPlay();
+            } else if (button.getText().equals("Start Game")) {
+                // If start game button clicked, set minutesPlayed text to 1, set the scoringPlay
+                // to startGame, reset button background
+                editTextMinutesPlayed.setText("1");
+                scoringPlay = "strtGame";
+                resetButtonBackground();
+                confirmPlay();
+            } else if (button.getText().equals("Change Score")) {
+                // If change score button clicked, create input dialog with 2 textviews
+                // and 2 edittexts and a "Change" and "Cancel" button
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.setContentView(R.layout.change_score_linearlayout);
+                dialog.setTitle("Enter Current Score");
+
+                TextView textViewHomeName = (TextView) dialog.findViewById(R.id.textViewHomeName);
+                textViewHomeName.setText(textViewHomeTeam.getText());
+                TextView textViewAwayName = (TextView) dialog.findViewById(R.id.textViewAwayName);
+                textViewAwayName.setText(textViewAwayTeam.getText());
+
+                final EditText editTextHomeScore = (EditText) dialog.findViewById(R.id.editTextHomeScore);
+                final EditText editTextAwayScore = (EditText) dialog.findViewById(R.id.editTextAwayScore);
+
+                Button buttonCancel = (Button) dialog.findViewById(R.id.buttonCancel);
+                // if button is clicked, close the custom dialog
+                buttonCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                });
+
+                Button buttonChange = (Button) dialog.findViewById(R.id.buttonChange);
+                buttonChange.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int homeScore = Integer.parseInt(editTextHomeScore.getText().toString());
+                        int awayScore = Integer.parseInt(editTextAwayScore.getText().toString());
+                        final ConnectivityManager conMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
+                        if (!(activeNetwork != null && activeNetwork.isConnected())) {
+                            // if yes is clicked and user is offline, redirect them to network settings
+                            dialog.cancel();
+                            displayToast("Please connect to either wifi or a mobile network then try again");
+                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        } else {
+                            // if yes clicked change score and call sendtask asynctask to update database
+                            ScoreGameFragmentActivity.homeScore = homeScore;
+                            ScoreGameFragmentActivity.awayScore = awayScore;
+                            textViewHomeScore.setText(String.valueOf(homeScore));
+                            textViewAwayScore.setText(String.valueOf(awayScore));
+                            scoringPlay = "updt" + pad(homeScore) + pad(awayScore);
+                            new SendTask().execute(GameSelectionActivity.SERVER_ADDRESS + "update_game.php");
+                            dialog.cancel();
+                        }
+                    }
+                });
+
+                dialog.show();
             }
         }
     };
+
+    // Pads single digit ints with a leading zero to keep 2 character length
+    private String pad(int c) {
+        return c >= 10 ? String.valueOf(c) : "0" + String.valueOf(c);
+    }
 
     private View.OnClickListener homeClickListener = new View.OnClickListener() {
         @Override
@@ -172,6 +249,8 @@ public class ScoreGameFragment extends Fragment {
                 play = "Half Time";
             } else if (scoringPlay.contains("full")) {
                 play = "Full Time";
+            } else if (scoringPlay.contains("strt")) {
+                play = "Game Started";
             } else {
                 play = scoringPlay.substring(4, scoringPlay.length());
             }
@@ -240,8 +319,6 @@ public class ScoreGameFragment extends Fragment {
         buttonAwayPenalty.setBackgroundColor(Color.TRANSPARENT);
         buttonHomeDropGoal.setBackgroundColor(Color.TRANSPARENT);
         buttonAwayDropGoal.setBackgroundColor(Color.TRANSPARENT);
-        buttonHalfTime.setBackgroundColor(Color.TRANSPARENT);
-        buttonFullTime.setBackgroundColor(Color.TRANSPARENT);
     }
 
     // Changes static score variables in ScoreGameFragmentActivity then updates

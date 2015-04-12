@@ -1,7 +1,6 @@
 package chrisdalzell.livescoregames;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,8 +36,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import chrisdalzell.livescoregames.R;
-
 public class GameSelectionActivity extends FragmentActivity {
 
     Context mContext;
@@ -58,26 +54,40 @@ public class GameSelectionActivity extends FragmentActivity {
     //public static List<String> divisions = Arrays.asList("Div 1", "Women", "Div 2", "Div 3", "Colts",
     //"U18", "U16", "U14.5", "U13", "U11.5", "U10", "U8.5", "U7");
     List<String> divisions = Arrays.asList("Div 1");
-    List<String> teamsDiv1 = Arrays.asList("Waihora", "Lincoln", "Raikaia", "Methven", "Southbridge", "Burn/Duns/Irwell", "Glenmark", "Darfield",
-            "Ashley", "Prebbleton", "Celtic", "Saracens", "Oxford", "Ohoka", "Kaiapoi", "West Melton", "Southern", "Hampstead");
+    List<String> teamsDiv1 = Arrays.asList("Hornby", "Waihora", "Lincoln", "Raikaia", "Methven", "Southbridge", "Burn/Duns/Irwell", "Glenmark", "Darfield",
+            "Ashley", "Prebbleton", "Celtic", "Saracens", "Oxford", "Ohoka", "Kaiapoi", "West Melton", "Southern", "Hampstead", "Rolleston");
     List<String> teamsWomen = Arrays.asList();
-    List<String> teamsDiv2 = Arrays.asList("Springston", "West Melton", "Diamond Harbour", "Leeston", "Darfield", "Selwyn", "Banks Peninsula",
-            "Southbridge", "Hornby", "Kirwee", "Rolleston", "Lincoln", "Prebbleton", "Burn/Duns/Irwell");
-    List<String> teamsDiv3 = Arrays.asList("Hornby", "Waihora", "Kirwee", "Springston", "Burn/Duns/Irwell", "Lincoln");
-    List<String> teamsColts = Arrays.asList("Banks Peninsula", "Waihora", "Prebbleton", "Celtic", "Rolleston", "Lincoln", "West Melton", "Darfield",
-            "Springston", "Kirwee");
-    List<String> teamsU18 = Arrays.asList("Malvern Combined", "Waihora", "Springston/Southbridge", "Meth/Allen/Rak", "Tinwald/Celtic");
-    List<String> teamsU16 = Arrays.asList("Ashley", "Oxford", "Waihora", "Woodend/Ohoka", "Rolleston", "Prebbleton", "West Melton", "Celtic",
-            "Malvern Combined", "Lincoln", "Kaiapoi", "Harlequins");
+    List<String> teamsDiv2 = Arrays.asList("Springston", "Diamond Harbour", "Darfield", "Banks Peninsula",
+            "Southbridge", "Kirwee", "Lincoln", "Prebbleton", "Burn/Duns/Irwell");
+    List<String> teamsDiv3 = Arrays.asList("Hornby", "Waihora", "Kirwee", "Springston", "Burn/Duns/Irwell", "Lincoln", "Rolleston", "West Melton");
+    List<String> teamsColts = Arrays.asList("Banks Peninsula", "Waihora", "Prebbleton", "Celtic", "Lincoln Red", "Lincoln Black", "West Melton", "Darfield",
+            "Springston", "Kirwee", "Burn/Duns/Irwell");
+    List<String> teamsU18 = Arrays.asList("Malvern Combined", "Waihora", "Rangiora High School", "Methven/Rakaia", "Hurunui",
+            "Kaiapoi", "Ashley/Oxford", "West Melton/Rolleston", "Lincoln", "Celtic");
+    List<String> teamsU16 = Arrays.asList("Ashley/Amberley", "Oxford", "Waihora", "Rolleston", "Prebbleton", "West Melton/Southbridge", "Celtic",
+            "Malvern", "Lincoln", "Kaiapoi", "Hampstead", "Hurunui", "Methven", "Saracens");
     List<String> teamsU145 = Arrays.asList("Rolleston", "Prebbleton", "Malvern Combined", "West Melton", "Waihora", "Lincoln", "Duns/Southbr/Leest/Irwell");
-    List<String> teamsU13 = Arrays.asList("Rolleston Black", "Rolleston Gold", "West Melton", "Lincoln", "Waihora", "Duns/Irwell/Leeston",
-            "Prebbleton White", "Springston/Southbridge", "Prebbleton Blue", "Darfield");
-    List<String> teamsU115 = Arrays.asList("Prebbleton Black", "Rolleston Black", "Rolleston Gold", "Lincoln", "Southbridge", "Waihora White",
-            "Duns/Irwell/Sprinst", "Selwyn/Sheffield", "West Melton", "Prebbleton Blue", "Prebbleton White", "Waihora Black", "Banks Peninsula",
-            "Leeston", "Darfield/Kirwee");
-    List<String> teamsU10 = Arrays.asList();
-    List<String> teamsU9 = Arrays.asList();
-    List<String> teamsU75 = Arrays.asList();
+    List<String> teamsU13 = Arrays.asList("Rolleston Black", "Rolleston Gold", "West Melton", "Lincoln", "Waihora White", "Waihora Black", "Duns/Irwell/Leeston",
+            "Prebbleton White", "Springston/Lincoln", "Prebbleton Blue", "Darfield", "Southbridge", "Malvern Combined");
+    List<String> teamsU115 = Arrays.asList("Rolleston Black", "Rolleston Gold", "Lincoln", "Southbridge", "Waihora",
+            "Duns/Irwell", "West Melton Gold", "West Melton Blue", "Prebbleton Blue", "Prebbleton White", "Banks Peninsula",
+            "Leeston", "Malvern Combined", "Prebbleton Green", "Prebbleton Red", "Springston");
+    List<String> teamsU10 = Arrays.asList("Rolleston Black", "Rolleston Gold", "Lincoln Red", "Lincoln Black", "Waihora White", "Waihora Black",
+            "Duns/Irwell", "West Melton Gold", "West Melton Blue", "Prebbleton Blue", "Prebbleton White", "Banks Peninsula",
+            "Leeston/Southbridge", "Prebbleton Green", "Prebbleton Red", "Springston", "Selwyn", "Darfield", "Rolleston Red", "Rolleston Blue");
+    List<String> teamsU85 = Arrays.asList("Rolleston Black", "Rolleston Gold", "Rolleston White", "Lincoln Red", "Lincoln Black", "Waihora White", "Waihora Black", "Waihora Red",
+            "Duns/Irwell", "West Melton Gold", "West Melton Blue", "Prebbleton Blue", "Prebbleton White", "Banks Peninsula",
+            "Leeston Red", "Leeston Black", "Prebbleton Green", "Prebbleton Red", "Springston Black", "Springston Green", "Selwyn", "Darfield", "Sheffield", "Rolleston Red",
+            "Leeston White", "West Melton White", "Kirwee", "Southbridge");
+    List<String> teamsU7 = Arrays.asList("Rolleston Black", "Rolleston Gold", "Rolleston Red", "Rolleston Blue", "Rolleston White",
+            "Lincoln Red (Section 1)", "Lincoln Red (Section 4)", "Lincoln Black", "Lincoln Green", "Lincoln White",
+            "Waihora White", "Waihora Black", "Waihora Red", "Waihora Gold", "Waihora Green", "Duns/Irwell Blue", "Duns/Irwell Black",
+            "West Melton Gold", "West Melton Blue", "West Melton White", "West Melton Red", "West Melton Black",
+            "Prebbleton 1", "Prebbleton 2", "Prebbleton 3", "Prebbleton 4", "Prebbleton 5", "Prebbleton 6", "Prebbleton 7", "Prebbleton 8",
+            "Banks Peninsula Maroon", "Banks Peninsula Gold", "Leeston Red", "Leeston Black", "Leeston White",
+            "Springston Black", "Springston Green", "Springston White", "Selwyn Black", "Selwyn Green", "Darfield Red", "Darfield Blue", "Sheffield",
+            "Kirwee Red", "Kirwee Yellow", "Kirwee White", "Kirwee Gold", "Southbridge White", "Southbridge Blue", "Southbridge Black",
+            "Diamond Harbour White", "Diamond Harbour Blue");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +109,8 @@ public class GameSelectionActivity extends FragmentActivity {
         Collections.sort(teamsU13);
         Collections.sort(teamsU115);
         Collections.sort(teamsU10);
-        Collections.sort(teamsU9);
-        Collections.sort(teamsU75);
+        Collections.sort(teamsU85);
+        Collections.sort(teamsU7);
 
         spinnerDivision = (Spinner) findViewById(R.id.spinnerDivisionSelect);
         spinnerHomeTeam = (Spinner) findViewById(R.id.spinnerHomeTeamSelect);
@@ -291,10 +301,10 @@ public class GameSelectionActivity extends FragmentActivity {
                     teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU10);
                     break;
                 case 11:
-                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU9);
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU85);
                     break;
                 case 12:
-                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU75);
+                    teamsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, teamsU7);
                     break;
             }
 

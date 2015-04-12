@@ -27,8 +27,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import chrisdalzell.livescoregames.R;
-
 public class ScoringPlaysFragment extends Fragment {
 
     LinearLayout tableLayoutScoringPlays;
@@ -41,7 +39,7 @@ public class ScoringPlaysFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_game_info, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_scoringplays, container, false);
 
         TextView textViewHomeGameInfo = (TextView) rootView.findViewById(R.id.textViewHomeGameInfo);
         textViewHomeGameInfo.setText(ScoreGameFragmentActivity.homeTeamName);
@@ -68,6 +66,14 @@ public class ScoringPlaysFragment extends Fragment {
                 TextView textViewMinutes = (TextView) linearLayout.findViewById(R.id.textViewMinutes);
                 textViewMinutes.setText(String.valueOf(homeScore) + "-" + String.valueOf(awayScore) +
                         "\nFull Time");
+            } else if (scoringPlay.contains("strt")) {
+                TextView textViewMinutes = (TextView) linearLayout.findViewById(R.id.textViewMinutes);
+                textViewMinutes.setText("Game Started");
+            } else if (scoringPlay.contains("updt")) {
+                changeScore(scoringPlay);
+                TextView textViewMinutes = (TextView) linearLayout.findViewById(R.id.textViewMinutes);
+                textViewMinutes.setText(String.valueOf(homeScore) + "-" + String.valueOf(awayScore) +
+                        "\nScore Updated");
             } else {
                 String team = scoringPlay.substring(0, 4);
                 String play = scoringPlay.substring(4, scoringPlay.length());
@@ -94,14 +100,13 @@ public class ScoringPlaysFragment extends Fragment {
                     }
                     textViewDescription.setText(s.getDescription());
                 }
-
-
-                // Set id so scoring play can be identified when clicked
-                linearLayout.setId(id);
-                id += 1;
-
-                linearLayout.setOnClickListener(scoringPlayClickListener);
             }
+
+            // Set id so scoring play can be identified when clicked
+            linearLayout.setId(id);
+            id += 1;
+
+            linearLayout.setOnClickListener(scoringPlayClickListener);
 
             // Add this linear layout to main linear layout
             tableLayoutScoringPlays.addView(linearLayout);
@@ -152,14 +157,12 @@ public class ScoringPlaysFragment extends Fragment {
         // Get clicked rows id
         int viewID = view.getId();
         if (getView() != null) {
-            // Get main LinearLayout containing title tablerow and scrollview with plays inside it
-            View v = ((ViewGroup) getView()).getChildAt(0);
             // Get scrollview
-            View v1 = ((ViewGroup) v).getChildAt(1);
-            // Get specific scoring play LinearLayout to be deleted
-            View v2 = ((ViewGroup) v1).getChildAt(0);
-            // Remove it from main LinearLayout
-            ((ViewGroup) v2).removeViewAt(viewID);
+            View v = ((ViewGroup) getView()).getChildAt(1);
+            // Get linearlayout inside scrollview
+            View v1 = ((ViewGroup) v).getChildAt(0);
+            // Remove specific scoring play LinearLayout from main LinearLayout
+            ((ViewGroup) v1).removeViewAt(viewID);
             // Remove it from local arraylist
             ScoreGameFragmentActivity.scoringPlays.remove(viewID);
             // Recreate fragments to get correct score.
@@ -173,6 +176,12 @@ public class ScoringPlaysFragment extends Fragment {
             // Delete from server
             new DeleteScoringPlay().execute(GameSelectionActivity.SERVER_ADDRESS + "delete_scoring_play.php", viewID);
         }
+    }
+
+    // Changes the scores based on a score update
+    private void changeScore(String scoringPlay) {
+        homeScore = Integer.parseInt(scoringPlay.substring(4,6));
+        awayScore = Integer.parseInt(scoringPlay.substring(6,8));
     }
 
     // Changes the scores based on team and scoring play type

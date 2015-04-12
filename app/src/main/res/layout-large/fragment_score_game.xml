@@ -2,11 +2,55 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:id="@+id/scrollView">
 
     <TableLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:text="@string/start_game_button"
+                android:id="@+id/buttonStartGame"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/scoring_play_button_height"
+                android:layout_weight="1"
+                android:textSize="@dimen/scoring_play_button_text_size"/>
+
+            <Button
+                android:text="@string/change_score_button"
+                android:id="@+id/buttonChangeScore"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/scoring_play_button_height"
+                android:layout_weight="1"
+                android:textSize="@dimen/scoring_play_button_text_size"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="@dimen/scoring_play_button_height"
+                android:layout_weight="1"
+                android:textSize="@dimen/scoring_play_button_text_size"
+                android:text="@string/half_time_button"
+                android:id="@+id/buttonHalfTime"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="@dimen/scoring_play_button_height"
+                android:layout_weight="1"
+                android:textSize="@dimen/scoring_play_button_text_size"
+                android:text="@string/full_time_button"
+                android:id="@+id/buttonFullTime"/>
+        </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -140,20 +184,12 @@
             android:layout_height="wrap_content">
 
             <Button
+                android:text="@string/send_button"
+                android:id="@+id/sendButton"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/scoring_play_button_height"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="@dimen/scoring_play_button_text_size"
-                android:text="Half Time"
-                android:id="@+id/buttonHalfTime"/>
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="@dimen/scoring_play_button_height"
-                android:layout_weight="1"
-                android:textSize="@dimen/scoring_play_button_text_size"
-                android:text="Full Time"
-                android:id="@+id/buttonFullTime"/>
+                android:textSize="@dimen/scoring_play_button_text_size"/>
         </TableRow>
 
         <TableRow
@@ -199,19 +235,6 @@
                 android:layout_weight="1"
                 android:inputType="textMultiLine"
                 android:id="@+id/editTextDescription"
-                android:textSize="@dimen/scoring_play_button_text_size"/>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:text="@string/send_button"
-                android:id="@+id/sendButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textSize="@dimen/scoring_play_button_text_size"/>
         </TableRow>
     </TableLayout>
